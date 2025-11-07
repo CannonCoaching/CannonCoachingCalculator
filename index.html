@@ -4,247 +4,325 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Cannon Coaching — TDEE & Macros Calculator</title>
+
 <style>
-:root{--bg:#0f1115;--card:#171a21;--ink:#e7e9ee;--muted:#a8adbd;--accent:#7c4dff;--accent2:#22d3ee;--r:18px}
-*{box-sizing:border-box} body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;color:var(--ink);background:linear-gradient(180deg,#0b0d12,#0f1115);line-height:1.45;padding:24px}
-.wrap{max-width:920px;margin:0 auto}
-header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
-.brand{font-weight:800;font-size:20px} .tag{font-size:12px;color:var(--muted)}
-.card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:var(--r);padding:20px;box-shadow:0 10px 28px rgba(0,0,0,.35)}
-h1{font-size:28px;margin:4px 0 8px} h2{font-size:18px;margin:0 0 10px;color:var(--muted);font-weight:600}
-label{display:block;margin:10px 0 6px;color:var(--muted);font-weight:600}
-input,select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.10);background:#0e1118;color:var(--ink)}
-input:focus,select:focus{border-color:var(--accent)}
-.grid{display:grid;gap:14px}
-@media(min-width:760px){.grid-2{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:repeat(3,1fr)}}
-.row{display:flex;gap:12px;flex-wrap:wrap}
-.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:rgba(124,77,255,.12);color:#d9d2ff;font-size:12px;font-weight:600}
-button{all:unset;background:linear-gradient(135deg,var(--accent),var(--accent2));padding:12px 16px;border-radius:14px;cursor:pointer;display:inline-block;color:#fff;font-weight:800;text-align:center;box-shadow:0 10px 20px rgba(124,77,255,.25)}
-.btn-muted{background:#262b36;border:1px solid rgba(255,255,255,.14)}
-.small{font-size:12px;color:var(--muted)}
-.kpi{display:flex;flex-direction:column;gap:8px;padding:16px;border-radius:14px;background:#0e1118;border:1px solid rgba(255,255,255,.06)}
-.kpi h3{margin:0;font-size:16px}.kpi .val{font-size:24px;font-weight:900}
-.hr{height:1px;background:#2a2f3a;margin:18px 0}
-footer{color:var(--muted);font-size:12px;margin:24px 6px;text-align:center}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;z-index:50}
-.modal{background:var(--card);border:1px solid rgba(255,255,255,.12);border-radius:18px;max-width:560px;width:92%;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+:root{
+  --bg:#0f1115;
+  --card:#171a21;
+  --ink:#e7e9ee;
+  --muted:#a8adbd;
+  --accent:#7c4dff;
+  --accent2:#22d3ee;
+  --r:18px;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  color:var(--ink);
+  background:linear-gradient(180deg,#0b0d12,#0f1115);
+  line-height:1.45;
+  padding:24px;
+}
+.wrap{max-width:920px;margin:0 auto;}
+header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:18px;
+}
+.brand{font-weight:800;font-size:20px;}
+.tag{font-size:12px;color:var(--muted);}
+.card{
+  background:var(--card);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:var(--r);
+  padding:20px;
+  box-shadow:0 10px 28px rgba(0,0,0,.35);
+}
+h1{font-size:28px;margin:4px 0 8px;}
+h2{font-size:18px;margin:0 0 10px;color:var(--muted);font-weight:600;}
+label{display:block;margin:10px 0 6px;color:var(--muted);font-weight:600;}
+input,select{
+  width:100%;
+  padding:12px 14px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.10);
+  background:#0e1118;
+  color:var(--ink);
+}
+input:focus,select:focus{border-color:var(--accent);}
+.grid{display:grid;gap:14px;}
+@media(min-width:760px){
+  .grid-2{grid-template-columns:1fr 1fr;}
+  .grid-3{grid-template-columns:repeat(3,1fr);}
+}
+.row{display:flex;gap:12px;flex-wrap:wrap;}
+.pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(124,77,255,.12);
+  color:#d9d2ff;
+  font-size:12px;
+  font-weight:600;
+}
+button{
+  all:unset;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  padding:12px 16px;
+  border-radius:14px;
+  cursor:pointer;
+  display:inline-block;
+  color:#fff;
+  font-weight:800;
+  text-align:center;
+  box-shadow:0 10px 20px rgba(124,77,255,.25);
+}
+.btn-muted{
+  background:#262b36;
+  border:1px solid rgba(255,255,255,.14);
+}
+.small{font-size:12px;color:var(--muted);}
+.kpi{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  padding:16px;
+  border-radius:14px;
+  background:#0e1118;
+  border:1px solid rgba(255,255,255,.06);
+}
+.kpi h3{margin:0;font-size:16px;}
+.kpi .val{font-size:24px;font-weight:900;}
+.hr{height:1px;background:#2a2f3a;margin:18px 0;}
+footer{color:var(--muted);font-size:12px;margin:24px 6px;text-align:center;}
 </style>
 </head>
+
 <body>
 <div class="wrap">
-  <header>
+
+<header>
+  <div>
+    <div class="brand">Cannon Coaching</div>
+    <div class="tag">Transformation Coaching and Personal Training</div>
+  </div>
+  <span class="pill">Free tool, accurate results</span>
+</header>
+
+<div class="card">
+  <h1>TDEE & Macros Calculator</h1>
+  <h2>Personalised daily calories using the Mifflin–St Jeor formula.</h2>
+
+  <div class="grid grid-2">
     <div>
-      <div class="brand">Cannon Coaching</div>
-      <div class="tag">Transformation Coaching and Personal Training</div>
+      <label for="sex">Sex assigned at birth</label>
+      <select id="sex">
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
     </div>
-    <span class="pill">Free tool, accurate results</span>
-  </header>
-
-  <div class="card">
-    <h1>TDEE & Macros Calculator</h1>
-    <h2>Personalised daily calories using the Mifflin–St Jeor equation.</h2>
-
-    <div class="grid grid-2">
-      <div>
-        <label for="sex">Sex assigned at birth</label>
-        <select id="sex"><option value="male">Male</option><option value="female">Female</option></select>
-      </div>
-      <div>
-        <label for="age">Age</label>
-        <input id="age" type="number" min="14" max="100" value="30">
-      </div>
-      <div>
-        <label for="height">Height</label>
-        <div class="row">
-          <select id="heightUnit" onchange="swapHeightUnit()"><option value="cm" selected>cm</option><option value="ftin">ft/in</option></select>
-          <input id="heightCm" type="number" placeholder="cm" value="175">
-          <input id="heightFt" type="number" placeholder="ft" style="display:none">
-          <input id="heightIn" type="number" placeholder="in" style="display:none">
-        </div>
-      </div>
-      <div>
-        <label for="weight">Weight</label>
-        <div class="row">
-          <select id="weightUnit" onchange="swapWeightUnit()"><option value="kg" selected>kg</option><option value="lb">lb</option><option value="stlb">st/lb</option></select>
-          <input id="weightKg" type="number" placeholder="kg" value="80">
-          <input id="weightLb" type="number" placeholder="lb" style="display:none">
-          <input id="weightSt" type="number" placeholder="st" style="display:none">
-          <input id="weightStLb" type="number" placeholder="lb" style="display:none">
-        </div>
-      </div>
+    <div>
+      <label for="age">Age</label>
+      <input id="age" type="number" value="30">
     </div>
 
-    <div class="grid grid-2" style="margin-top:8px">
-      <div>
-        <label for="activity">Activity level</label>
-        <select id="activity">
-          <option value="1.2">Sedentary</option>
-          <option value="1.375" selected>Lightly active</option>
-          <option value="1.55">Moderately active</option>
-          <option value="1.725">Very active</option>
-          <option value="1.9">Extra active</option>
+    <div>
+      <label>Height</label>
+      <div class="row">
+        <select id="heightUnit" onchange="swapHeightUnit()">
+          <option value="cm" selected>cm</option>
+          <option value="ftin">ft/in</option>
         </select>
-      </div>
-      <div>
-        <label for="goal">Goal</label>
-        <select id="goal">
-          <option value="recomp" selected>Recomposition</option>
-          <option value="fatloss">Fat loss</option>
-          <option value="gain">Muscle gain</option>
-          <option value="maintain">Maintenance</option>
-        </select>
+        <input id="heightCm" type="number" value="175">
+        <input id="heightFt" type="number" placeholder="ft" style="display:none">
+        <input id="heightIn" type="number" placeholder="in" style="display:none">
       </div>
     </div>
 
-    <div style="display:flex;gap:12px;margin-top:12px">
-      <button onclick="startCalc()">Calculate</button>
-      <button class="btn-muted" onclick="resetForm()">Reset</button>
+    <div>
+      <label>Weight</label>
+      <div class="row">
+        <select id="weightUnit" onchange="swapWeightUnit()">
+          <option value="kg" selected>kg</option>
+          <option value="lb">lb</option>
+          <option value="stlb">st/lb</option>
+        </select>
+        <input id="weightKg" type="number" value="80">
+        <input id="weightLb" type="number" style="display:none">
+        <input id="weightSt" type="number" style="display:none">
+        <input id="weightStLb" type="number" style="display:none">
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-2" style="margin-top:8px">
+    <div>
+      <label>Activity level</label>
+      <select id="activity">
+        <option value="1.2">Sedentary</option>
+        <option value="1.375" selected>Lightly active</option>
+        <option value="1.55">Moderately active</option>
+        <option value="1.725">Very active</option>
+        <option value="1.9">Extra active</option>
+      </select>
+    </div>
+    <div>
+      <label>Goal</label>
+      <select id="goal">
+        <option value="recomp" selected>Recomposition</option>
+        <option value="fatloss">Fat loss</option>
+        <option value="gain">Muscle gain</option>
+        <option value="maintain">Maintenance</option>
+      </select>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;margin-top:12px">
+    <button onclick="calculate()">Calculate</button>
+    <button class="btn-muted" onclick="resetForm()">Reset</button>
+  </div>
+
+  <div class="hr"></div>
+
+  <div id="results" style="display:none">
+    <div class="grid grid-3">
+      <div class="kpi">
+        <h3>BMR</h3><div class="val" id="bmrOut">–</div>
+      </div>
+      <div class="kpi">
+        <h3>TDEE</h3><div class="val" id="tdeeOut">–</div>
+      </div>
+      <div class="kpi">
+        <h3>Target Calories</h3><div class="val" id="targetOut">–</div>
+        <div class="small" id="deltaNote"></div>
+      </div>
+    </div>
+
+    <div class="hr"></div>
+    <h2>Daily Macros</h2>
+
+    <div class="grid grid-3">
+      <div class="kpi"><h3>Protein</h3><div class="val" id="proteinOut">–</div></div>
+      <div class="kpi"><h3>Fat</h3><div class="val" id="fatOut">–</div></div>
+      <div class="kpi"><h3>Carbs</h3><div class="val" id="carbOut">–</div></div>
     </div>
 
     <div class="hr"></div>
 
-    <div id="results" style="display:none">
-      <div class="grid grid-3">
-        <div class="kpi"><h3>BMR</h3><div class="val" id="bmrOut">–</div><div class="small">Calories burned at rest</div></div>
-        <div class="kpi"><h3>TDEE</h3><div class="val" id="tdeeOut">–</div><div class="small">Daily calories to maintain</div></div>
-        <div class="kpi"><h3>Target Calories</h3><div class="val" id="targetOut">–</div><div class="small" id="deltaNote"></div></div>
-      </div>
+    <!-- ✅ SIMPLE SUBSCRIBE BUTTON -->
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <a href="YOUR_MAILCHIMP_SIGNUP_URL_HERE" target="_blank" rel="noopener">
+        <button>Subscribe here for coaching tips</button>
+      </a>
 
-      <div class="hr"></div>
-      <h2>Daily Macros</h2>
-      <div class="grid grid-3">
-        <div class="kpi"><h3>Protein</h3><div class="val" id="proteinOut">–</div><div class="small">≈ 2.2 g per kg</div></div>
-        <div class="kpi"><h3>Fat</h3><div class="val" id="fatOut">–</div><div class="small">≥ 0.8 g per kg</div></div>
-        <div class="kpi"><h3>Carbs</h3><div class="val" id="carbOut">–</div><div class="small">Remainder of calories</div></div>
-      </div>
-
-      <div class="hr"></div>
-      <div class="card">
-        <h2 style="margin:0 0 6px 0">Next step</h2>
-        <p class="small" style="margin:0 0 10px 0">If the numbers make sense and you’re ready to move, brilliant. If you’re unsure how to use them, message me — I’ll walk you through it so you’re not guessing.</p>
-        <a href="https://linktr.ee/cannoncoaching"><button>Join Cannon Coaching</button></a>
-      </div>
+      <a href="https://linktr.ee/cannoncoaching" target="_blank" rel="noopener">
+        <button class="btn-muted">Work with me</button>
+      </a>
     </div>
-  </div>
 
-  <footer>Supportive coaching for real people. © <span id="year"></span> Cannon Coaching.</footer>
+  </div>
 </div>
 
-<!-- Lead Capture Modal -->
-<div id="leadOverlay" class="overlay" role="dialog" aria-modal="true">
-  <div class="modal">
-    <h3 style="margin:0 0 6px 0">Your results are ready</h3>
-    <p class="small">Pop your details in to get your numbers and a quick-start guide. No spam.</p>
-    <div class="grid grid-2">
-      <div><label>First name</label><input id="leadName" type="text" placeholder="e.g. David"></div>
-      <div><label>Email</label><input id="leadEmail" type="email" placeholder="you@example.com"></div>
-    </div>
-    <label style="display:flex;align-items:center;gap:6px;margin-top:12px">
-      <input id="leadConsent" type="checkbox" style="width:auto">
-      <span class="small">I agree to receive emails. Unsubscribe anytime.</span>
-    </label>
-    <div style="display:flex;gap:12px;margin-top:16px">
-      <button onclick="submitLead()">Email me my results</button>
-      <button class="btn-muted" onclick="skipLead()">Skip, show results</button>
-    </div>
-  </div>
+<footer>
+  Supportive coaching for real people. © <span id="year"></span> Cannon Coaching.
+</footer>
+
 </div>
 
 <script>
 const $ = (id)=>document.getElementById(id);
+document.getElementById('year').textContent = new Date().getFullYear();
 
-// ---- Inputs / units
 function swapHeightUnit(){
-  const u=$('heightUnit').value;
-  $('heightCm').style.display=(u==='cm')?'block':'none';
-  $('heightFt').style.display=(u==='ftin')?'inline-block':'none';
-  $('heightIn').style.display=(u==='ftin')?'inline-block':'none';
+  let u=$('heightUnit').value;
+  $('heightCm').style.display = (u==='cm')?'block':'none';
+  $('heightFt').style.display = (u==='ftin')?'inline-block':'none';
+  $('heightIn').style.display = (u==='ftin')?'inline-block':'none';
 }
+
 function swapWeightUnit(){
-  const u=$('weightUnit').value;
-  $('weightKg').style.display=(u==='kg')?'block':'none';
-  $('weightLb').style.display=(u==='lb')?'block':'none';
-  const st=(u==='stlb');
-  $('weightSt').style.display=st?'inline-block':'none';
-  $('weightStLb').style.display=st?'inline-block':'none';
+  let u=$('weightUnit').value;
+  $('weightKg').style.display = (u==='kg')?'block':'none';
+  $('weightLb').style.display = (u==='lb')?'block':'none';
+  let st = (u==='stlb');
+  $('weightSt').style.display = st?'inline-block':'none';
+  $('weightStLb').style.display = st?'inline-block':'none';
 }
+
 function getHeightCm(){
-  const u=$('heightUnit').value;
-  if(u==='cm') return parseFloat($('heightCm').value||0);
-  const ft=parseFloat($('heightFt').value||0), inch=parseFloat($('heightIn').value||0);
+  let u=$('heightUnit').value;
+  if(u==='cm') return +$('heightCm').value;
+  let ft=+$('heightFt').value, inch=+$('heightIn').value;
   return (ft*12+inch)*2.54;
 }
+
 function getWeightKg(){
-  const u=$('weightUnit').value;
-  if(u==='kg') return parseFloat($('weightKg').value||0);
-  if(u==='lb') return parseFloat($('weightLb').value||0)*0.45359237;
-  const st=parseFloat($('weightSt').value||0), lb=parseFloat($('weightStLb').value||0);
+  let u=$('weightUnit').value;
+  if(u==='kg') return +$('weightKg').value;
+  if(u==='lb') return +$('weightLb').value * 0.45359237;
+  let st=+$('weightSt').value, lb=+$('weightStLb').value;
   return ((st*14)+lb)*0.45359237;
 }
-function round(n,d=0){const p=Math.pow(10,d);return Math.round(n*p)/p;}
 
-// ---- Calc
+function round(n){return Math.round(n);}
+
 function calculate(){
   const sex=$('sex').value;
-  const age=+($('age').value||0);
-  const h=getHeightCm(), w=getWeightKg();
-  const act=+($('activity').value||1.2);
+  const age=+$('age').value;
+  const h=getHeightCm();
+  const w=getWeightKg();
+  const act=+$('activity').value;
   const goal=$('goal').value;
-  if(!age||!h||!w){ alert('Please enter age, height and weight.'); return; }
+
+  if(!age||!h||!w){
+    alert('Please fill out age, height and weight.');
+    return;
+  }
 
   let bmr = 10*w + 6.25*h - 5*age + (sex==='male'?5:-161);
-  const tdee = bmr * act;
+  let tdee = bmr * act;
 
-  let target=tdee, delta='Same as TDEE';
-  if(goal==='fatloss'){ target=tdee*0.80; delta='About '+round(tdee-target)+' kcal below TDEE'; }
-  if(goal==='recomp'){ target=tdee*0.90; delta='About '+round(tdee-target)+' kcal below TDEE'; }
-  if(goal==='gain'){ target=tdee*1.10;  delta='About '+round(target-tdee)+' kcal above TDEE'; }
+  let target=tdee;
+  let delta='Same as TDEE';
 
-  const protein_g = 2.2*w;
-  const fat_g = 0.8*w;
-  const remaining = target - (protein_g*4 + fat_g*9);
-  const carbs_g = Math.max(0, remaining/4);
+  if(goal==='fatloss'){
+    target=tdee*0.80;
+    delta='~' + round(tdee-target) + ' kcal deficit';
+  }
+  if(goal==='recomp'){
+    target=tdee*0.90;
+    delta='~' + round(tdee-target) + ' kcal deficit';
+  }
+  if(goal==='gain'){
+    target=tdee*1.10;
+    delta='~' + round(target-tdee) + ' kcal surplus';
+  }
 
-  $('bmrOut').textContent   = round(bmr);
-  $('tdeeOut').textContent  = round(tdee);
-  $('targetOut').textContent= round(target);
-  $('deltaNote').textContent= delta;
+  let protein=2.2*w;
+  let fat=0.8*w;
+  let remaining = target - (protein*4 + fat*9);
+  let carbs = remaining/4;
 
-  $('proteinOut').textContent= round(protein_g)+' g';
-  $('fatOut').textContent    = round(fat_g)+' g';
-  $('carbOut').textContent   = round(carbs_g)+' g';
+  $('bmrOut').textContent = round(bmr);
+  $('tdeeOut').textContent = round(tdee);
+  $('targetOut').textContent = round(target);
+  $('deltaNote').textContent = delta;
+  $('proteinOut').textContent = round(protein) + ' g';
+  $('fatOut').textContent = round(fat) + ' g';
+  $('carbOut').textContent = round(carbs) + ' g';
 
   $('results').style.display='block';
 }
 
-// ---- Flow
-function startCalc(){ $('leadOverlay').style.display='flex'; }
-function skipLead(){ $('leadOverlay').style.display='none'; calculate(); }
-function resetForm(){ location.reload(); }
-
-// ---- Mailchimp submit (posts to your audience in new tab, then shows results here)
-async function submitLead(){
-  const name = $('leadName').value.trim();
-  const email= $('leadEmail').value.trim();
-  const ok   = $('leadConsent').checked;
-  if(!name||!email||!ok){ alert('Please add your name, email, and tick consent.'); return; }
-
-  const form = document.createElement('form');
-  form.action = 'https://linktr.us7.list-manage.com/subscribe/post?u=59dd0a4a523d512c857f78ede&id=b380dd645f&f_id=00f899e4f0';
-  form.method = 'POST';
-  form.target = '_blank';
-
-  const e = document.createElement('input'); e.type='hidden'; e.name='EMAIL'; e.value=email; form.appendChild(e);
-  const f = document.createElement('input'); f.type='hidden'; f.name='FNAME'; f.value=name;  form.appendChild(f);
-  const t = document.createElement('input'); t.type='hidden'; t.name='tags';  t.value='TDEE calculator'; form.appendChild(t);
-
-  document.body.appendChild(form);
-  form.submit(); // opens Mailchimp thank-you/confirm page
-  $('leadOverlay').style.display='none';
-  calculate();   // keep the user on your page with results shown
+function resetForm(){
+  location.reload();
 }
-
-document.getElementById('year').textContent = new Date().getFullYear();
 </script>
+
 </body>
 </html>
