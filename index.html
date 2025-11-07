@@ -78,6 +78,28 @@ button:active{transform:translateY(1px)}
   border-color:var(--accent);
   box-shadow:inset 0 0 0 1px var(--accent);
 }
+
+a.btn{
+  display:inline-block;
+  background:#0f1216;
+  padding:12px 16px;
+  border-radius:14px;
+  color:#ffffff;
+  font-weight:800;
+  text-decoration:none;
+  border:1px solid var(--line);
+  transition:transform .06s ease, border-color .12s ease, box-shadow .12s ease;
+}
+a.btn:hover{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(0,200,255,.12);
+}
+a.btn:active{ transform:translateY(1px); }
+a.btn-primary{
+  border-color:var(--accent);
+  box-shadow:inset 0 0 0 1px var(--accent);
+}
+
 .small{font-size:12px;color:var(--muted)}
 .kpi{
   display:flex;flex-direction:column;gap:8px;padding:16px;border-radius:14px;
@@ -89,7 +111,6 @@ button:active{transform:translateY(1px)}
 footer{color:#9aa0ab;font-size:12px;margin:24px 6px;text-align:center}
 .coach-card{display:flex;gap:12px;align-items:center;margin-top:8px}
 .coach-photo{width:64px;height:64px;border-radius:12px;object-fit:cover;border:1px solid var(--line)}
-.row-actions{display:flex;gap:12px;flex-wrap:wrap}
 .badge{
   display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
   background:#0c1014;border:1px solid var(--line);color:#dfe3ea;font-size:12px;font-weight:700;
@@ -99,8 +120,6 @@ footer{color:#9aa0ab;font-size:12px;margin:24px 6px;text-align:center}
   position:fixed;left:50%;transform:translateX(-50%);bottom:20px;background:#101419;border:1px solid var(--line);
   padding:10px 14px;border-radius:12px;color:#e7e9ee;display:none
 }
-.link-clean{color:#cfefff;text-decoration:none;border-bottom:1px solid rgba(0,200,255,.25)}
-.link-clean:hover{border-bottom-color:rgba(0,200,255,.6)}
 </style>
 </head>
 
@@ -109,6 +128,7 @@ footer{color:#9aa0ab;font-size:12px;margin:24px 6px;text-align:center}
 
   <header>
     <div class="brandblock">
+      <!-- Your logo file (space is URL-encoded) -->
       <img class="logo" src="Cannon%20Coaching.png" alt="Cannon Coaching logo" onerror="this.style.display='none'">
       <div>
         <div class="brand">Cannon Coaching</div>
@@ -120,7 +140,7 @@ footer{color:#9aa0ab;font-size:12px;margin:24px 6px;text-align:center}
 
   <div class="card">
     <h1>TDEE & Macros Calculator</h1>
-    <h2>Accurate daily calories using the Mifflin–St Jeor formula. Black-and-white, no fluff.</h2>
+    <h2>Daily calories. Black and white. No fluff.</h2>
 
     <div class="grid grid-2">
       <div>
@@ -178,8 +198,8 @@ footer{color:#9aa0ab;font-size:12px;margin:24px 6px;text-align:center}
     </div>
 
     <div class="row" style="gap:12px;margin-top:12px">
-      <button class="btn-primary" onclick="calculate()">Calculate</button>
-      <button onclick="resetForm()">Reset</button>
+      <a class="btn btn-primary" href="#" onclick="calculate();return false;" role="button">Calculate</a>
+      <a class="btn" href="#" onclick="resetForm();return false;" role="button">Reset</a>
     </div>
 
     <div class="hr"></div>
@@ -203,21 +223,22 @@ footer{color:#9aa0ab;font-size:12px;margin:24px 6px;text-align:center}
 
       <!-- Quick actions -->
       <div class="row" style="gap:12px;flex-wrap:wrap">
-        <button class="btn-primary" onclick="copyResults()">Copy results</button>
+        <a class="btn btn-primary" href="#" onclick="copyResults();return false;" role="button">Copy results</a>
         <input id="emailForSend" type="email" placeholder="your email (optional)" style="max-width:260px">
-        <button onclick="emailResults()">Email these results to me</button>
+        <a class="btn" href="#" onclick="emailResults();return false;" role="button">Email these results to me</a>
       </div>
 
       <div class="hr"></div>
 
       <!-- Subscribe + CTA -->
       <div class="row" style="gap:12px;flex-wrap:wrap">
-        <a href="https://linktr.us7.list-manage.com/subscribe?u=59dd0a4a523d512c857f78ede&id=b380dd645f" target="_blank" rel="noopener">
-          <button class="btn-primary">Subscribe here for coaching tips</button>
-        </a>
-        <a href="https://linktr.ee/cannoncoaching" target="_blank" rel="noopener">
-          <button>Work with me</button>
-        </a>
+        <a class="btn btn-primary"
+           href="https://linktr.us7.list-manage.com/subscribe?u=59dd0a4a523d512c857f78ede&id=b380dd645f"
+           target="_blank" rel="noopener" role="button">Subscribe here for coaching tips</a>
+
+        <a class="btn"
+           href="https://linktr.ee/cannoncoaching"
+           target="_blank" rel="noopener" role="button">Work with me</a>
       </div>
 
       <div class="hr"></div>
@@ -226,13 +247,13 @@ footer{color:#9aa0ab;font-size:12px;margin:24px 6px;text-align:center}
       <div class="coach-card">
         <img class="coach-photo" src="2.png" alt="Coach Jack Cannon" onerror="this.style.display='none'">
         <div class="small">
-          Numbers are a tool, not a personality test. If anything’s confusing, please reach out to me and I’ll show you how to use them so you stop starting over.
+          If anything’s confusing, message me — I’ll show you how to use them so you stop starting over.
         </div>
       </div>
     </div>
   </div>
 
-  <footer>Supportive coaching for real people. © <span id="year"></span> Cannon Coaching.</footer>
+  <footer>Inclusive coaching for real people. © <span id="year"></span> Cannon Coaching.</footer>
 </div>
 
 <div id="toast" class="toast">Copied</div>
