@@ -62,16 +62,8 @@
         .brand-logo {
             width: 40px;
             height: 40px;
-            background-color: #fff;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #000;
-            font-weight: bold;
-            font-size: 10px;
-            text-align: center;
-            line-height: 1.1;
+            border-radius: 8px;
+            object-fit: cover;
         }
 
         .brand-text h2 {
@@ -209,15 +201,18 @@
             color: #000000;
             border: none;
             display: block;
+            text-align: center;
             text-decoration: none;
             margin-top: 24px;
+            padding: 12px 24px;
+            border-radius: 24px;
+            font-weight: bold;
         }
 
         .btn-action:hover {
             background-color: #e0e0e0;
         }
 
-        /* Results Area Styling */
         #resultsArea {
             display: none;
             text-align: center;
@@ -289,11 +284,12 @@
 <body>
 
 <div class="calculator-container">
-    <img src="index.html.jpg" alt="Jack Cannon - Cannon Coaching" class="header-img">
+    
+    <img src="header.png" alt="Cannon Coaching header image" class="header-img">
     
     <div class="brand-banner">
         <div class="brand-info">
-            <div class="brand-logo">CC</div> 
+            <img src="logo.png" alt="Cannon Coaching Logo" class="brand-logo">
             <div class="brand-text">
                 <h2>Cannon Coaching</h2>
                 <p>Transformation Coaching and Personal Training</p>
@@ -413,7 +409,6 @@
     document.getElementById('tdeeForm').addEventListener('submit', function(e) {
         e.preventDefault();
 
-        // --- 1. GATHER DATA ---
         const email = document.getElementById('email').value;
         const sex = document.getElementById('sex').value;
         const age = parseFloat(document.getElementById('age').value);
@@ -424,49 +419,36 @@
         const activity = document.getElementById('activity').value;
         const goal = document.getElementById('goal').value;
 
-        // --- 2. CALCULATE MATH ---
-        // Convert to metric for Mifflin-St Jeor equation
         let weightKg = weightUnit === 'lbs' ? weight / 2.20462 : weight;
         let heightCm = heightUnit === 'in' ? height * 2.54 : height;
 
-        // BMR Calculation
         let bmr = (10 * weightKg) + (6.25 * heightCm) - (5 * age);
         bmr += (sex === 'male') ? 5 : -161;
 
-        // Activity Multiplier
         let activityMultiplier = 1.2;
         if (activity === 'lightly_active') activityMultiplier = 1.375;
         if (activity === 'moderately_active') activityMultiplier = 1.55;
         if (activity === 'very_active') activityMultiplier = 1.725;
 
-        // TDEE Maintenance
         let tdee = bmr * activityMultiplier;
 
-        // Goal Adjustment
-        if (goal === 'cut') tdee -= 500; // Standard 500 cal deficit
-        if (goal === 'bulk') tdee += 300; // Standard 300 cal surplus
+        if (goal === 'cut') tdee -= 500; 
+        if (goal === 'bulk') tdee += 300; 
 
         tdee = Math.round(tdee);
 
-        // Macro Split Logic
-        // Protein: ~2g per kg of bodyweight
         let protein = Math.round(weightKg * 2.2); 
-        // Fats: 25% of total calories (9 cals per gram)
         let fat = Math.round((tdee * 0.25) / 9);
-        // Carbs: The remainder of calories (4 cals per gram)
         let carbs = Math.round((tdee - (protein * 4) - (fat * 9)) / 4);
 
-        // --- 3. UPDATE THE UI ---
         document.getElementById('resultCalories').innerText = tdee.toLocaleString();
         document.getElementById('resultProtein').innerText = protein + "g";
         document.getElementById('resultFat').innerText = fat + "g";
         document.getElementById('resultCarbs').innerText = carbs + "g";
 
-        // Hide form, show results
         document.getElementById('formArea').style.display = 'none';
         document.getElementById('resultsArea').style.display = 'block';
 
-        // --- 4. SEND TO MAILCHIMP SILENTLY ---
         const mailchimpUrl = "https://linktr.us7.list-manage.com/subscribe/post?u=59dd0a4a523d512c857f78ede&id=b380dd645f&f_id=008999e4f0"; 
         const data = new URLSearchParams();
         data.append('EMAIL', email);
