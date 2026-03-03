@@ -1,373 +1,179 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Cannon Coaching — TDEE & Macros Calculator</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#0b0c0e;         /* near-black background */
-  --card:#121416;       /* dark card */
-  --ink:#ffffff;        /* white text */
-  --muted:#b8bcc6;      /* soft grey */
-  --line:#21252b;       /* hairline separators */
-  --accent:#00C8FF;     /* electric blue accent */
-  --r:18px;
-}
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0; font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-  color:var(--ink); background:linear-gradient(180deg,#090a0c,#0b0c0e);
-  line-height:1.45; padding:24px;
-}
-.wrap{max-width:920px;margin:0 auto}
-header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
-.brandblock{display:flex;align-items:center;gap:14px}
-.logo{height:52px;width:auto;filter:drop-shadow(0 2px 8px rgba(0,0,0,.35))}
-.brand{font-weight:800;font-size:20px;letter-spacing:.2px}
-.tag{font-size:12px;color:var(--muted)}
-.card{
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:var(--r);
-  padding:22px;
-  box-shadow:0 14px 34px rgba(0,0,0,.45);
-}
-h1{font-size:28px;margin:4px 0 8px}
-h2{font-size:16px;margin:0 0 12px;color:var(--muted);font-weight:600}
-label{display:block;margin:10px 0 6px;color:#d9dde6;font-weight:600}
-input,select{
-  width:100%;
-  padding:12px 14px;
-  border-radius:12px;
-  border:1px solid #191c21;
-  background:#0d0f12;
-  color:var(--ink);
-  outline:none;
-  transition:border .12s ease, box-shadow .12s ease;
-}
-input:focus,select:focus{
-  border-color:var(--accent);
-  box-shadow:0 0 0 3px rgba(0,200,255,.18);
-}
-.grid{display:grid;gap:14px}
-@media(min-width:760px){.grid-2{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:repeat(3,1fr)}}
-.row{display:flex;gap:12px;flex-wrap:wrap}
-
-button{
-  all:unset;
-  background:#0f1216;                 /* matte black button */
-  padding:12px 16px;
-  border-radius:14px;
-  cursor:pointer;
-  display:inline-block;
-  color:#ffffff;
-  font-weight:800;
-  text-align:center;
-  border:1px solid var(--line);
-  transition:transform .06s ease, border-color .12s ease, box-shadow .12s ease;
-}
-button:hover{
-  border-color:var(--accent);
-  box-shadow:0 0 0 3px rgba(0,200,255,.12);
-}
-button:active{transform:translateY(1px)}
-.btn-primary{
-  border-color:var(--accent);
-  box-shadow:inset 0 0 0 1px var(--accent);
-}
-
-a.btn{
-  display:inline-block;
-  background:#0f1216;
-  padding:12px 16px;
-  border-radius:14px;
-  color:#ffffff;
-  font-weight:800;
-  text-decoration:none;
-  border:1px solid var(--line);
-  transition:transform .06s ease, border-color .12s ease, box-shadow .12s ease;
-}
-a.btn:hover{
-  border-color:var(--accent);
-  box-shadow:0 0 0 3px rgba(0,200,255,.12);
-}
-a.btn:active{ transform:translateY(1px); }
-a.btn-primary{
-  border-color:var(--accent);
-  box-shadow:inset 0 0 0 1px var(--accent);
-}
-
-.small{font-size:12px;color:var(--muted)}
-.kpi{
-  display:flex;flex-direction:column;gap:8px;padding:16px;border-radius:14px;
-  background:#0d0f12;border:1px solid var(--line)
-}
-.kpi h3{margin:0;font-size:14px;color:#e6e9ee;font-weight:600}
-.kpi .val{font-size:24px;font-weight:900;letter-spacing:.2px}
-.hr{height:1px;background:var(--line);margin:18px 0}
-footer{color:#9aa0ab;font-size:12px;margin:24px 6px;text-align:center}
-.coach-card{display:flex;gap:12px;align-items:center;margin-top:8px}
-.coach-photo{width:64px;height:64px;border-radius:12px;object-fit:cover;border:1px solid var(--line)}
-.badge{
-  display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
-  background:#0c1014;border:1px solid var(--line);color:#dfe3ea;font-size:12px;font-weight:700;
-}
-.badge .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 14px var(--accent)}
-.toast{
-  position:fixed;left:50%;transform:translateX(-50%);bottom:20px;background:#101419;border:1px solid var(--line);
-  padding:10px 14px;border-radius:12px;color:#e7e9ee;display:none
-}
-</style>
-</head>
-
-<body>
-<div class="wrap">
-
-  <header>
-    <div class="brandblock">
-      <!-- Your logo file (space is URL-encoded) -->
-      <img class="logo" src="Cannon%20Coaching.png" alt="Cannon Coaching logo" onerror="this.style.display='none'">
-      <div>
-        <div class="brand">Cannon Coaching</div>
-        <div class="tag">Transformation Coaching and Personal Training</div>
-      </div>
-    </div>
-    <span class="badge"><span class="dot"></span> Free tool</span>
-  </header>
-
-  <div class="card">
-    <h1>TDEE & Macros Calculator</h1>
-    <h2>Daily calories. Black and white. No fluff.</h2>
-
-    <div class="grid grid-2">
-      <div>
-        <label for="sex">Sex assigned at birth</label>
-        <select id="sex"><option value="male">Male</option><option value="female">Female</option></select>
-      </div>
-      <div>
-        <label for="age">Age</label>
-        <input id="age" type="number" min="14" max="100" value="30" inputmode="numeric">
-      </div>
-
-      <div>
-        <label for="height">Height</label>
-        <div class="row">
-          <select id="heightUnit" onchange="swapHeightUnit()"><option value="cm" selected>cm</option><option value="ftin">ft/in</option></select>
-          <input id="heightCm" type="number" placeholder="cm" value="175" inputmode="numeric">
-          <input id="heightFt" type="number" placeholder="ft" style="display:none" inputmode="numeric">
-          <input id="heightIn" type="number" placeholder="in" style="display:none" inputmode="numeric">
-        </div>
-      </div>
-
-      <div>
-        <label for="weight">Weight</label>
-        <div class="row">
-          <select id="weightUnit" onchange="swapWeightUnit()"><option value="kg" selected>kg</option><option value="lb">lb</option><option value="stlb">st/lb</option></select>
-          <input id="weightKg" type="number" placeholder="kg" value="80" inputmode="numeric">
-          <input id="weightLb" type="number" placeholder="lb" style="display:none" inputmode="numeric">
-          <input id="weightSt" type="number" placeholder="st" style="display:none" inputmode="numeric">
-          <input id="weightStLb" type="number" placeholder="lb" style="display:none" inputmode="numeric">
-        </div>
-      </div>
-    </div>
-
-    <div class="grid grid-2" style="margin-top:8px">
-      <div>
-        <label for="activity">Activity level</label>
-        <select id="activity">
-          <option value="1.2">Sedentary</option>
-          <option value="1.375" selected>Lightly active</option>
-          <option value="1.55">Moderately active</option>
-          <option value="1.725">Very active</option>
-          <option value="1.9">Extra active</option>
-        </select>
-      </div>
-
-      <div>
-        <label for="goal">Goal</label>
-        <select id="goal">
-          <option value="recomp" selected>Recomposition</option>
-          <option value="fatloss">Fat loss</option>
-          <option value="gain">Muscle gain</option>
-          <option value="maintain">Maintenance</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="row" style="gap:12px;margin-top:12px">
-      <a class="btn btn-primary" href="#" onclick="calculate();return false;" role="button">Calculate</a>
-      <a class="btn" href="#" onclick="resetForm();return false;" role="button">Reset</a>
-    </div>
-
-    <div class="hr"></div>
-
-    <div id="results" style="display:none">
-      <div class="grid grid-3">
-        <div class="kpi"><h3>BMR</h3><div class="val" id="bmrOut">–</div><div class="small">Calories burned at rest</div></div>
-        <div class="kpi"><h3>TDEE</h3><div class="val" id="tdeeOut">–</div><div class="small">Daily calories to maintain</div></div>
-        <div class="kpi"><h3>Target Calories</h3><div class="val" id="targetOut">–</div><div class="small" id="deltaNote"></div></div>
-      </div>
-
-      <div class="hr"></div>
-      <h2>Daily Macros</h2>
-      <div class="grid grid-3">
-        <div class="kpi"><h3>Protein</h3><div class="val" id="proteinOut">–</div><div class="small">≈ 2.2 g per kg</div></div>
-        <div class="kpi"><h3>Fat</h3><div class="val" id="fatOut">–</div><div class="small">≥ 0.8 g per kg</div></div>
-        <div class="kpi"><h3>Carbs</h3><div class="val" id="carbOut">–</div><div class="small">Remainder of calories</div></div>
-      </div>
-
-      <div class="hr"></div>
-
-      <!-- Quick actions -->
-      <div class="row" style="gap:12px;flex-wrap:wrap">
-        <a class="btn btn-primary" href="#" onclick="copyResults();return false;" role="button">Copy results</a>
-        <input id="emailForSend" type="email" placeholder="your email (optional)" style="max-width:260px">
-        <a class="btn" href="#" onclick="emailResults();return false;" role="button">Email these results to me</a>
-      </div>
-
-      <div class="hr"></div>
-
-      <!-- Subscribe + CTA -->
-      <div class="row" style="gap:12px;flex-wrap:wrap">
-        <a class="btn btn-primary"
-           href="https://linktr.us7.list-manage.com/subscribe?u=59dd0a4a523d512c857f78ede&id=b380dd645f"
-           target="_blank" rel="noopener" role="button">Subscribe here for coaching tips</a>
-
-        <a class="btn"
-           href="https://linktr.ee/cannoncoaching"
-           target="_blank" rel="noopener" role="button">Work with me</a>
-      </div>
-
-      <div class="hr"></div>
-
-      <!-- Coach card -->
-      <div class="coach-card">
-        <img class="coach-photo" src="2.png" alt="Coach Jack Cannon" onerror="this.style.display='none'">
-        <div class="small">
-          If anything’s confusing, message me — I’ll show you how to use them so you stop starting over.
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <footer>Inclusive coaching for real people. © <span id="year"></span> Cannon Coaching.</footer>
-</div>
-
-<div id="toast" class="toast">Copied</div>
-
-<script>
-const $ = (id)=>document.getElementById(id);
-document.getElementById('year').textContent = new Date().getFullYear();
-
-/* Unit controls */
-function swapHeightUnit(){
-  const u=$('heightUnit').value;
-  $('heightCm').style.display=(u==='cm')?'block':'none';
-  $('heightFt').style.display=(u==='ftin')?'inline-block':'none';
-  $('heightIn').style.display=(u==='ftin')?'inline-block':'none';
-}
-function swapWeightUnit(){
-  const u=$('weightUnit').value;
-  $('weightKg').style.display=(u==='kg')?'block':'none';
-  $('weightLb').style.display=(u==='lb')?'block':'none';
-  const st=(u==='stlb');
-  $('weightSt').style.display=st?'inline-block':'none';
-  $('weightStLb').style.display=st?'inline-block':'none';
-}
-function getHeightCm(){
-  const u=$('heightUnit').value;
-  if(u==='cm') return parseFloat($('heightCm').value||0);
-  const ft=parseFloat($('heightFt').value||0);
-  const inch=parseFloat($('heightIn').value||0);
-  return (ft*12+inch)*2.54;
-}
-function getWeightKg(){
-  const u=$('weightUnit').value;
-  if(u==='kg') return parseFloat($('weightKg').value||0);
-  if(u==='lb') return parseFloat($('weightLb').value||0) * 0.45359237;
-  const st=parseFloat($('weightSt').value||0);
-  const lb=parseFloat($('weightStLb').value||0);
-  return ((st*14)+lb) * 0.45359237;
-}
-function round(n,d=0){const p=Math.pow(10,d);return Math.round(n*p)/p;}
-
-/* Core calculation */
-function calculate(){
-  const sex=$('sex').value;
-  const age=parseFloat($('age').value||0);
-  const h=getHeightCm();
-  const w=getWeightKg();
-  const act=parseFloat($('activity').value);
-  const goal=$('goal').value;
-
-  if(!age||!h||!w){ alert('Please fill out age, height and weight.'); return; }
-
-  // Mifflin–St Jeor
-  let bmr = 10*w + 6.25*h - 5*age + (sex==='male' ? 5 : -161);
-  const tdee = bmr * act;
-
-  // Targets
-  let target=tdee, deltaTxt='Same as TDEE';
-  if(goal==='fatloss'){ target=tdee*0.80; deltaTxt='~' + round(tdee-target) + ' kcal deficit'; }
-  if(goal==='recomp'){ target=tdee*0.90; deltaTxt='~' + round(tdee-target) + ' kcal deficit'; }
-  if(goal==='gain'){ target=tdee*1.10;  deltaTxt='~' + round(target-tdee) + ' kcal surplus'; }
-
-  // Macros
-  const protein_g = 2.2*w;           // ~2.2 g/kg
-  const fat_g = 0.8*w;               // ≥ 0.8 g/kg
-  const remaining_cals = target - (protein_g*4 + fat_g*9);
-  const carb_g = Math.max(0, remaining_cals/4);
-
-  // Output
-  $('bmrOut').textContent   = round(bmr);
-  $('tdeeOut').textContent  = round(tdee);
-  $('targetOut').textContent= round(target);
-  $('deltaNote').textContent= deltaTxt;
-
-  $('proteinOut').textContent= round(protein_g) + ' g';
-  $('fatOut').textContent    = round(fat_g) + ' g';
-  $('carbOut').textContent   = round(carb_g) + ' g';
-
-  $('results').style.display='block';
-}
-
-/* Utilities */
-function getResultsText(){
-  if($('results').style.display==='none'){ return ''; }
-  return [
-    'Your Cannon Coaching numbers:',
-    'BMR: ' + $('bmrOut').textContent + ' kcal',
-    'TDEE: ' + $('tdeeOut').textContent + ' kcal',
-    'Target Calories: ' + $('targetOut').textContent + ' kcal (' + $('deltaNote').textContent + ')',
-    'Protein: ' + $('proteinOut').textContent,
-    'Fat: ' + $('fatOut').textContent,
-    'Carbs: ' + $('carbOut').textContent,
-    '',
-    'Need help using these numbers? Reply and I’ll walk you through it.'
-  ].join('\n');
-}
-function copyResults(){
-  const txt = getResultsText();
-  if(!txt){ alert('Calculate first.'); return; }
-  navigator.clipboard.writeText(txt).then(()=>toast('Copied to clipboard'));
-}
-function emailResults(){
-  const txt = getResultsText();
-  if(!txt){ alert('Calculate first.'); return; }
-  const to = ($('emailForSend').value || '').trim();
-  const subject = encodeURIComponent('Your Cannon Coaching numbers');
-  const body = encodeURIComponent(txt);
-  const href = 'mailto:' + encodeURIComponent(to) + '?subject=' + subject + '&body=' + body;
-  window.location.href = href;
-}
-function toast(msg){
-  const el=$('toast'); el.textContent=msg; el.style.display='block'; setTimeout(()=>el.style.display='none',1600);
-}
-function resetForm(){ location.reload(); }
-</script>
-
-</body>
-</html>
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/index.html b/index.html
+index b285a9c7e47af1acf92dbbf2e1f52a623b99e71b..a63251494590f576f0e6286e5f5c3ead6f8cd419 100644
+--- a/index.html
++++ b/index.html
+@@ -1,50 +1,62 @@
+ <!doctype html>
+ <html lang="en">
+ <head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width,initial-scale=1">
+ <title>Cannon Coaching — TDEE & Macros Calculator</title>
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+ <style>
+ :root{
+   --bg:#0b0c0e;         /* near-black background */
+   --card:#121416;       /* dark card */
+   --ink:#ffffff;        /* white text */
+   --muted:#b8bcc6;      /* soft grey */
+   --line:#21252b;       /* hairline separators */
+   --accent:#00C8FF;     /* electric blue accent */
+   --r:18px;
+ }
+ *{box-sizing:border-box}
+ html,body{height:100%}
+ body{
+   margin:0; font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+   color:var(--ink); background:linear-gradient(180deg,#090a0c,#0b0c0e);
+   line-height:1.45; padding:24px;
+ }
+ .wrap{max-width:920px;margin:0 auto}
++.hero{
++  margin-bottom:16px;
++  border-radius:16px;
++  overflow:hidden;
++  border:1px solid var(--line);
++  box-shadow:0 12px 30px rgba(0,0,0,.35);
++}
++.hero img{
++  width:100%;
++  height:auto;
++  display:block;
++}
+ header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+ .brandblock{display:flex;align-items:center;gap:14px}
+ .logo{height:52px;width:auto;filter:drop-shadow(0 2px 8px rgba(0,0,0,.35))}
+ .brand{font-weight:800;font-size:20px;letter-spacing:.2px}
+ .tag{font-size:12px;color:var(--muted)}
+ .card{
+   background:var(--card);
+   border:1px solid var(--line);
+   border-radius:var(--r);
+   padding:22px;
+   box-shadow:0 14px 34px rgba(0,0,0,.45);
+ }
+ h1{font-size:28px;margin:4px 0 8px}
+ h2{font-size:16px;margin:0 0 12px;color:var(--muted);font-weight:600}
+ label{display:block;margin:10px 0 6px;color:#d9dde6;font-weight:600}
+ input,select{
+   width:100%;
+   padding:12px 14px;
+   border-radius:12px;
+   border:1px solid #191c21;
+   background:#0d0f12;
+   color:var(--ink);
+   outline:none;
+   transition:border .12s ease, box-shadow .12s ease;
+ }
+@@ -104,50 +116,54 @@ a.btn-primary{
+ .kpi{
+   display:flex;flex-direction:column;gap:8px;padding:16px;border-radius:14px;
+   background:#0d0f12;border:1px solid var(--line)
+ }
+ .kpi h3{margin:0;font-size:14px;color:#e6e9ee;font-weight:600}
+ .kpi .val{font-size:24px;font-weight:900;letter-spacing:.2px}
+ .hr{height:1px;background:var(--line);margin:18px 0}
+ footer{color:#9aa0ab;font-size:12px;margin:24px 6px;text-align:center}
+ .coach-card{display:flex;gap:12px;align-items:center;margin-top:8px}
+ .coach-photo{width:64px;height:64px;border-radius:12px;object-fit:cover;border:1px solid var(--line)}
+ .badge{
+   display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
+   background:#0c1014;border:1px solid var(--line);color:#dfe3ea;font-size:12px;font-weight:700;
+ }
+ .badge .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 14px var(--accent)}
+ .toast{
+   position:fixed;left:50%;transform:translateX(-50%);bottom:20px;background:#101419;border:1px solid var(--line);
+   padding:10px 14px;border-radius:12px;color:#e7e9ee;display:none
+ }
+ </style>
+ </head>
+ 
+ <body>
+ <div class="wrap">
+ 
++  <div class="hero">
++    <img src="Cannon%20Coaching.png" alt="Cannon Coaching banner" onerror="this.style.display='none'">
++  </div>
++
+   <header>
+     <div class="brandblock">
+       <!-- Your logo file (space is URL-encoded) -->
+       <img class="logo" src="Cannon%20Coaching.png" alt="Cannon Coaching logo" onerror="this.style.display='none'">
+       <div>
+         <div class="brand">Cannon Coaching</div>
+         <div class="tag">Transformation Coaching and Personal Training</div>
+       </div>
+     </div>
+     <span class="badge"><span class="dot"></span> Free tool</span>
+   </header>
+ 
+   <div class="card">
+     <h1>TDEE & Macros Calculator</h1>
+     <h2>Daily calories. Black and white. No fluff.</h2>
+ 
+     <div class="grid grid-2">
+       <div>
+         <label for="sex">Sex assigned at birth</label>
+         <select id="sex"><option value="male">Male</option><option value="female">Female</option></select>
+       </div>
+       <div>
+         <label for="age">Age</label>
+         <input id="age" type="number" min="14" max="100" value="30" inputmode="numeric">
+       </div>
+@@ -330,44 +346,51 @@ function calculate(){
+   $('proteinOut').textContent= round(protein_g) + ' g';
+   $('fatOut').textContent    = round(fat_g) + ' g';
+   $('carbOut').textContent   = round(carb_g) + ' g';
+ 
+   $('results').style.display='block';
+ }
+ 
+ /* Utilities */
+ function getResultsText(){
+   if($('results').style.display==='none'){ return ''; }
+   return [
+     'Your Cannon Coaching numbers:',
+     'BMR: ' + $('bmrOut').textContent + ' kcal',
+     'TDEE: ' + $('tdeeOut').textContent + ' kcal',
+     'Target Calories: ' + $('targetOut').textContent + ' kcal (' + $('deltaNote').textContent + ')',
+     'Protein: ' + $('proteinOut').textContent,
+     'Fat: ' + $('fatOut').textContent,
+     'Carbs: ' + $('carbOut').textContent,
+     '',
+     'Need help using these numbers? Reply and I’ll walk you through it.'
+   ].join('\n');
+ }
+ function copyResults(){
+   const txt = getResultsText();
+   if(!txt){ alert('Calculate first.'); return; }
+-  navigator.clipboard.writeText(txt).then(()=>toast('Copied to clipboard'));
++  navigator.clipboard.writeText(txt).then(()=>{
++    toast('Copied to clipboard. Opening next steps...');
++    redirectToOnboarding();
++  });
+ }
+ function emailResults(){
+   const txt = getResultsText();
+   if(!txt){ alert('Calculate first.'); return; }
+   const to = ($('emailForSend').value || '').trim();
+   const subject = encodeURIComponent('Your Cannon Coaching numbers');
+   const body = encodeURIComponent(txt);
+   const href = 'mailto:' + encodeURIComponent(to) + '?subject=' + subject + '&body=' + body;
+   window.location.href = href;
++  setTimeout(redirectToOnboarding, 1000);
++}
++function redirectToOnboarding(){
++  window.location.href = 'https://tr.ee/Help_get_me_started';
+ }
+ function toast(msg){
+   const el=$('toast'); el.textContent=msg; el.style.display='block'; setTimeout(()=>el.style.display='none',1600);
+ }
+ function resetForm(){ location.reload(); }
+ </script>
+ 
+ </body>
+ </html>
+ 
+EOF
+)
